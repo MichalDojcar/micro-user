@@ -11,3 +11,4 @@ java -jar target/micro-microbundle.jar
 
 # Call
 http://192.168.0.103:8080/resources/users/1
+Payara might run on a different url, it is printed out after it starts in the console

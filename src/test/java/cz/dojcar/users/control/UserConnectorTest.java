@@ -35,7 +35,7 @@ class UserConnectorTest {
     private UserConnector userConnector;
 
     @Test
-    void testGetById() {
+    void testGetById() throws Exception {
         Long userId = 1L;
 
         User expectedUser = new User();

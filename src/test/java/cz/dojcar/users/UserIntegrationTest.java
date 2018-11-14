@@ -28,7 +28,7 @@ class UserIntegrationTest {
     }
 
     @Test
-    void user_with_id_1_has_all_personal_data_and_10_posts() {
+    void user_with_id_1_has_all_personal_data_and_10_posts() throws Exception {
         User user = userResource.getUser(1L);
         assertNotNull(user);
         assertEquals("Leanne Graham", user.getName());
@@ -47,7 +47,7 @@ class UserIntegrationTest {
     @Test
     void user_with_not_existing_id_is_not_found() {
         assertThrows(
-                NotFoundException.class,
+                Exception.class,
                 () -> userResource.getUser(-1L));
     }
 }

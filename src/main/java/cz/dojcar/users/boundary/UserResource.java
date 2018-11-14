@@ -25,7 +25,7 @@ public class UserResource {
 
     @GET
     @Path("{id}")
-    public User getUser(@PathParam("id") Long id) {
+    public User getUser(@PathParam("id") Long id) throws Exception {
         if (id == null)
             throw new NotFoundException();
 

@@ -1,6 +1,7 @@
 package cz.dojcar.users.control;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -25,17 +26,19 @@ public class UserConnector {
         this.client = client;
     }
 
-    public User getById(Long id) {
-        User user = client
-                .target(USER_SOURCE_BASE_URL + USERS_PATH + id)
-                .request()
-                .get(User.class);
+    public User getById(Long id) throws Exception {
+        CompletableFuture<User> userFuture = CompletableFuture.supplyAsync(
+                () -> client.target(USER_SOURCE_BASE_URL + USERS_PATH + id)
+                            .request().get(User.class));
 
-        List<Post> posts = client
-                .target(USER_SOURCE_BASE_URL + USERS_PATH  + id + POSTS_PATH)
-                .request()
-                .get(new GenericType<List<Post>>() {});
+        CompletableFuture<List<Post>> postsFuture = CompletableFuture.supplyAsync(
+                () -> client.target(USER_SOURCE_BASE_URL + USERS_PATH + id + POSTS_PATH)
+                            .request().get(new GenericType<List<Post>>() {}));
 
+        return userFuture.thenCombine(postsFuture, this::updatePosts).get();
+    }
+
+    private User updatePosts(User user, List<Post> posts) {
         user.setPosts(posts);
         return user;
     }
